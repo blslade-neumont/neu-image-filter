@@ -1,19 +1,19 @@
 package tooearly.neumont.edu.imagefilter.Util;
 
-import android.graphics.ColorFilter;
+import android.graphics.ColorMatrix;
 
-public class InvertPaintCommand extends PaintCommand {
+public class InvertPaintCommand extends ColorMatrixCommand {
     public InvertPaintCommand() {
-        super("Invert Colors");
+        super("Invert Colors", invertMatrix);
     }
 
-    @Override
-    public void setColorFilter(ColorFilter filter) {
-        ;
-    }
-
-    @Override
-    public void render(PaintFrame frame) {
-        ;
+    private static ColorMatrix invertMatrix;
+    static {
+        invertMatrix = new ColorMatrix(new float[] {
+                -1.0f, 0.0f,  0.0f,  1.0f, 0.0f,
+                0.0f,  -1.0f, 0.0f,  1.0f, 0.0f,
+                0.0f,  0.0f,  -1.0f, 1.0f, 0.0f,
+                1.0f,  1.0f,  1.0f,  1.0f, 0.0f
+        });
     }
 }

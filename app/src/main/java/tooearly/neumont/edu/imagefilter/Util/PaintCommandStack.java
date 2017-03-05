@@ -6,6 +6,7 @@ import android.graphics.ColorFilter;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Matrix;
+import android.graphics.Paint;
 
 import java.util.Stack;
 
@@ -20,34 +21,35 @@ public class PaintCommandStack {
                                 redoStack = new Stack<>();
     private float[] matrixValues = new float[9];
 
-    public static ColorFilter invertFilter;
-    public static ColorFilter normalFilter;
-    static {
-        invertFilter = new ColorMatrixColorFilter(new ColorMatrix(new float[] {
-            -1.0f, 0.0f,  0.0f,  1.0f, 0.0f,
-            0.0f,  -1.0f, 0.0f,  1.0f, 0.0f,
-            0.0f,  0.0f,  -1.0f, 1.0f, 0.0f,
-            1.0f,  1.0f,  1.0f,  1.0f, 0.0f
-        }));
-        normalFilter = null;
-    }
-
     public void render(PaintView view, Canvas canvas) {
         PaintFrame frame = new PaintFrame(view, canvas);
         Matrix previousMatrix = new Matrix();
-        boolean isInverted = false;
+        ColorMatrix previousColorMatrix = null;
+        ColorFilter previousColorFilter = null;
+
         for (int q = undoStack.size() - 1; q >= 0; q--) {
             PaintCommand cmd = undoStack.get(q);
             Matrix newMatrix = new Matrix();
             previousMatrix.getValues(matrixValues);
             newMatrix.setValues(matrixValues);
-            cmd.setColorFilter(isInverted ? invertFilter : normalFilter);
+
+            if (cmd instanceof ColorMatrixCommand) {
+                ColorMatrix newColorMatrix = new ColorMatrix();
+                float[] values = ((ColorMatrixCommand)cmd).colorMatrix.getArray();
+                newColorMatrix.set(values);
+                if (previousColorMatrix != null) newColorMatrix.postConcat(previousColorMatrix);
+                previousColorMatrix = newColorMatrix;
+                previousColorFilter = new ColorMatrixColorFilter(previousColorMatrix);
+            }
+
+            cmd.setColorFilter(previousColorFilter);
             previousMatrix = cmd.calculateMatrix(newMatrix, frame);
-            if (cmd instanceof InvertPaintCommand) isInverted = !isInverted;
         }
 
-        if (isInverted) canvas.drawColor(Color.BLACK);
-        else canvas.drawColor(Color.WHITE);
+        Paint clearBrush = new Paint(Color.WHITE);
+        clearBrush.setColorFilter(previousColorFilter);
+        canvas.drawPaint(clearBrush);
+
         for (int q = 0; q < undoStack.size(); q++) {
             PaintCommand cmd = undoStack.get(q);
             cmd.renderFull(frame);

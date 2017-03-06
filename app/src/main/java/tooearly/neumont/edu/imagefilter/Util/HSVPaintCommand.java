@@ -2,8 +2,8 @@ package tooearly.neumont.edu.imagefilter.Util;
 
 import android.graphics.ColorMatrix;
 
-public class HueSaturationValuePaintCommand extends ColorMatrixCommand {
-    public HueSaturationValuePaintCommand(float hue, float saturation, float value) {
+public class HSVPaintCommand extends ColorMatrixCommand {
+    public HSVPaintCommand(float hue, float saturation, float value) {
         super("Hue, Saturation, Value", createColorMatrix(hue, saturation, value));
     }
 

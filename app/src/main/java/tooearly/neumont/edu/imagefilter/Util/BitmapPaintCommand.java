@@ -5,8 +5,17 @@ import android.graphics.ColorFilter;
 import android.graphics.Paint;
 
 public class BitmapPaintCommand extends PaintCommand {
+    public BitmapPaintCommand(Bitmap bmp) {
+        this(bmp, new Paint());
+    }
+    public BitmapPaintCommand(String name, Bitmap bmp) {
+        this(name, bmp, new Paint());
+    }
     public BitmapPaintCommand(Bitmap bmp, Paint brush) {
-        super("Bitmap");
+        this("Bitmap", bmp, brush);
+    }
+    public BitmapPaintCommand(String name, Bitmap bmp, Paint brush) {
+        super(name);
         this.bmp = bmp;
         this.brush = brush;
     }

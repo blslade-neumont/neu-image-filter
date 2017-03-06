@@ -7,7 +7,7 @@ public class InvertPaintCommand extends ColorMatrixCommand {
         super("Invert Colors", invertMatrix);
     }
 
-    private static ColorMatrix invertMatrix;
+    public static ColorMatrix invertMatrix;
     static {
         invertMatrix = new ColorMatrix(new float[] {
                 -1.0f, 0.0f,  0.0f,  1.0f, 0.0f,

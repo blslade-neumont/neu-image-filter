@@ -21,8 +21,8 @@
         android:layout_alignParentRight="true"
         android:layout_marginEnd="231dp"
         android:layout_marginRight="231dp"
-        android:onClick="dispatchTakePictureIntent"
-        android:src="@drawable/takeImage" />
+        android:onClick="launchCamera"
+        android:src="@drawable/take_image" />
 
     <ImageView
         android:id="@+id/cameraView"

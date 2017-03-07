@@ -1,5 +1,6 @@
 package tooearly.neumont.edu.imagefilter.Util;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
@@ -27,6 +28,7 @@ public class PaintCommandStack {
         ColorMatrix previousColorMatrix = null;
         ColorFilter previousColorFilter = null;
 
+        int startCommand = 0;
         for (int q = undoStack.size() - 1; q >= 0; q--) {
             PaintCommand cmd = undoStack.get(q);
             Matrix newMatrix = new Matrix();
@@ -44,13 +46,18 @@ public class PaintCommandStack {
 
             cmd.setColorFilter(previousColorFilter);
             previousMatrix = cmd.calculateMatrix(newMatrix, frame);
+
+            if (cmd instanceof BitmapPaintCommand) {
+                startCommand = q;
+                break;
+            }
         }
 
         Paint clearBrush = new Paint(Color.WHITE);
         clearBrush.setColorFilter(previousColorFilter);
         canvas.drawPaint(clearBrush);
 
-        for (int q = 0; q < undoStack.size(); q++) {
+        for (int q = startCommand; q < undoStack.size(); q++) {
             PaintCommand cmd = undoStack.get(q);
             cmd.renderFull(frame);
         }

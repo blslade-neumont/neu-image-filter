@@ -18,11 +18,14 @@ import java.io.File;
 import java.io.IOException;
 
 import tooearly.neumont.edu.imagefilter.R;
+import tooearly.neumont.edu.imagefilter.Services.BitmapStorageService;
 
 public class CaptureImageActivity extends AppCompatActivity {
 
     ImageView cameraView;
     public static final int REQUEST_IMAGE_CAPTURE = 1;
+
+    public static final String IMAGE_EXTRA = "tooearly.neumont.edu.imagefilter.extra_image";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +87,8 @@ public class CaptureImageActivity extends AppCompatActivity {
                 imageBitmap = Bitmap.createBitmap(imageBitmap, 0, 0, imageBitmap.getWidth(), imageBitmap.getHeight(), mat, true);
             }
             cameraView.setImageBitmap(imageBitmap);
+
+            navigateToEditor(imageBitmap);
         }
     }
     private Uri imageFileUri;
@@ -92,5 +97,12 @@ public class CaptureImageActivity extends AppCompatActivity {
         ContentValues values = new ContentValues();
         values.put(MediaStore.Images.Media.TITLE, fileName);
         imageFileUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+    }
+
+    private void navigateToEditor(Bitmap bmp) {
+        Intent intent = new Intent(this, DrawerActivity.class);
+        BitmapStorageService.storage.put(bmp.toString(), bmp);
+        intent.putExtra(IMAGE_EXTRA, bmp.toString());
+        startActivity(intent);
     }
 }

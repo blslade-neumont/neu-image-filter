@@ -1,7 +1,7 @@
 package tooearly.neumont.edu.imagefilter.Activities;
 
-import android.app.FragmentManager;
-import android.support.v4.app.Fragment;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -10,17 +10,13 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 
-
 import tooearly.neumont.edu.imagefilter.R;
-
+import tooearly.neumont.edu.imagefilter.Services.BitmapStorageService;
 
 public class DrawerActivity extends AppCompatActivity {
-
-//    ArrayList<Task> listItems=new ArrayList<>();
-//    TaskListAdapter adapter;
-
 
     private ListView drawerList;
     String[] drawerItems;
@@ -32,8 +28,10 @@ public class DrawerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawer);
 
-
-//        seedData();
+        Intent intent = getIntent();
+        Bitmap bmp = BitmapStorageService.storage.get(intent.getStringExtra(CaptureImageActivity.IMAGE_EXTRA));
+        ImageView imageView = (ImageView)this.findViewById(R.id.imageView);
+        imageView.setImageBitmap(bmp);
 
         drawerList = (ListView) findViewById(R.id.drawerList);
         drawerItems = new String[] { "Uno", "Dos", "Tres",
@@ -42,33 +40,23 @@ public class DrawerActivity extends AppCompatActivity {
         drawerList.setAdapter(new ArrayAdapter<>(this,
                 R.layout.drawer_list_item, drawerItems));
 
-
         drawerList.setAdapter(new ArrayAdapter<String>(this,
                 R.layout.drawer_list_item, drawerItems));
         drawerList.setOnItemClickListener(new DrawerItemClickListener());
 
-
-        drawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-                R.string.drawer_open, R.string.drawer_close) {
-
-            /** Called when a drawer has settled in a completely closed state. */
+        drawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close) {
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
-//                getActionBar().setTitle("close");
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+                invalidateOptionsMenu();
             }
-
-            /** Called when a drawer has settled in a completely open state. */
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-//                getActionBar().setTitle("open");
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+                invalidateOptionsMenu();
             }
         };
 
         // Set the drawer toggle as the DrawerListener
         mDrawerLayout.setDrawerListener(drawerToggle);
-
     }
 
     /* Called whenever we call invalidateOptionsMenu() */
@@ -92,8 +80,6 @@ public class DrawerActivity extends AppCompatActivity {
         System.out.println(drawerItems[position]);
         mDrawerLayout.closeDrawer(drawerList);
     }
-
-
 
     @Override
     protected void onStart() {

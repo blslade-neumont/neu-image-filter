@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -20,11 +19,14 @@ import tooearly.neumont.edu.imagefilter.Util.BWPaintCommand;
 import tooearly.neumont.edu.imagefilter.Util.InvertPaintCommand;
 import tooearly.neumont.edu.imagefilter.Util.MatrixPaintCommand;
 import tooearly.neumont.edu.imagefilter.Util.PaintCommand;
+import tooearly.neumont.edu.imagefilter.Util.SepiaPaintCommand;
+import tooearly.neumont.edu.imagefilter.Views.PaintView;
 
 public class DrawerActivity extends AppCompatActivity {
 
     private ListView drawerList;
     private DrawerLayout drawerLayout;
+    PaintView paintView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,8 +39,8 @@ public class DrawerActivity extends AppCompatActivity {
     private void init() {
         Intent intent = getIntent();
         Bitmap bmp = BitmapStorageService.storage.get(intent.getStringExtra(CaptureImageActivity.IMAGE_EXTRA));
-        ImageView imageView = (ImageView)this.findViewById(R.id.imageView);
-        imageView.setImageBitmap(bmp);
+        paintView = (PaintView)this.findViewById(R.id.paintView);
+        paintView.setBaseImage(bmp);
 
         initDrawer();
     }
@@ -53,6 +55,12 @@ public class DrawerActivity extends AppCompatActivity {
             @Override
             public void run() {
                 addCommand(new BWPaintCommand());
+            }
+        });
+        addDrawerItem("Sepia", new Runnable() {
+            @Override
+            public void run() {
+                addCommand(new SepiaPaintCommand());
             }
         });
         addDrawerItem("Flip Horizontally", new Runnable() {
@@ -88,7 +96,6 @@ public class DrawerActivity extends AppCompatActivity {
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//            drawerList.setItemChecked(position, true);
             drawerActions.get(position).run();
             drawerLayout.closeDrawer(drawerList);
         }
@@ -101,14 +108,17 @@ public class DrawerActivity extends AppCompatActivity {
         redo();
     }
     private void undo() {
-
+        if (paintView.stack.canUndo()) paintView.stack.undo();
+        paintView.invalidate();
     }
     private void redo() {
-
+        if (paintView.stack.canRedo()) paintView.stack.redo();
+        paintView.invalidate();
     }
 
     private void addCommand(PaintCommand cmd) {
-
+        paintView.stack.push(cmd);
+        paintView.invalidate();
     }
 
     public void onSaveClicked(View view) {

@@ -15,8 +15,12 @@ import tooearly.neumont.edu.imagefilter.Views.PaintView;
 
 public class PaintCommandStack {
     public PaintCommandStack() {
-
+        bmpCmd = new BitmapPaintCommand(null);
+        push(bmpCmd);
+        setMinimumUndoStackSize(undoStack.size());
     }
+
+    private BitmapPaintCommand bmpCmd;
 
     private Stack<PaintCommand> undoStack = new Stack<>(),
                                 redoStack = new Stack<>();
@@ -24,7 +28,26 @@ public class PaintCommandStack {
 
     public void render(PaintView view, Canvas canvas) {
         PaintFrame frame = new PaintFrame(view, canvas);
+        Bitmap baseImg = view.getBaseImage();
+        bmpCmd.setBitmap(baseImg);
+
+        float gutterLeft = 0, gutterRight = 0, gutterTop = 0, gutterBottom = 0;
+        float scale = 1;
         Matrix previousMatrix = new Matrix();
+        float canvasWidth = canvas.getWidth(), canvasHeight = canvas.getHeight();
+        float aspectRatio = baseImg.getWidth() / baseImg.getHeight();
+        float viewAspectRatio = canvasWidth / (float)canvasHeight;
+        if (viewAspectRatio > aspectRatio) {
+            scale = canvasHeight / baseImg.getHeight();
+            gutterLeft = gutterRight = (canvasWidth - baseImg.getWidth() * scale) / 2;
+        }
+        else {
+            scale = canvasWidth / baseImg.getWidth();
+            gutterTop = gutterBottom = (canvasHeight - baseImg.getHeight() * scale) / 2;
+        }
+        previousMatrix.postTranslate(gutterLeft, gutterTop);
+        previousMatrix.postScale(scale, scale);
+
         ColorMatrix previousColorMatrix = null;
         ColorFilter previousColorFilter = null;
 
@@ -63,10 +86,15 @@ public class PaintCommandStack {
         }
     }
 
+    private int minUndoStack = 0;
+    private void setMinimumUndoStackSize(int size) {
+        minUndoStack = Math.max(0, size);
+    }
     public boolean canUndo() {
-        return undoStack.size() > 0;
+        return undoStack.size() > minUndoStack;
     }
     public PaintCommand undo() {
+        if (!canUndo()) throw new IndexOutOfBoundsException();
         PaintCommand cmd = undoStack.pop();
         redoStack.push(cmd);
         return cmd;
@@ -76,6 +104,7 @@ public class PaintCommandStack {
         return redoStack.size() > 0;
     }
     public PaintCommand redo() {
+        if (!canRedo()) throw new IndexOutOfBoundsException();
         PaintCommand cmd = redoStack.pop();
         undoStack.push(cmd);
         return cmd;

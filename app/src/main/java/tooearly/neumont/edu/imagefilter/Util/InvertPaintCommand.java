@@ -10,10 +10,10 @@ public class InvertPaintCommand extends ColorMatrixCommand {
     public static ColorMatrix invertMatrix;
     static {
         invertMatrix = new ColorMatrix(new float[] {
-                -1.0f, 0.0f,  0.0f,  1.0f, 0.0f,
-                0.0f,  -1.0f, 0.0f,  1.0f, 0.0f,
-                0.0f,  0.0f,  -1.0f, 1.0f, 0.0f,
-                1.0f,  1.0f,  1.0f,  1.0f, 0.0f
+                -1,  0,  0,  0, 255,
+                0, -1,  0,  0, 255,
+                0,  0, -1,  0, 255,
+                0,  0,  0,  1,   0
         });
     }
 }

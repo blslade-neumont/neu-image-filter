@@ -22,6 +22,9 @@ public class BitmapPaintCommand extends PaintCommand {
 
     private Bitmap bmp;
     private Paint brush;
+    public void setBitmap(Bitmap bmp) {
+        this.bmp = bmp;
+    }
 
     @Override
     public void setColorFilter(ColorFilter filter) {
@@ -30,6 +33,6 @@ public class BitmapPaintCommand extends PaintCommand {
 
     @Override
     public void render(PaintFrame frame) {
-        frame.canvas.drawBitmap(bmp, 0, 0, brush);
+        if (bmp != null) frame.canvas.drawBitmap(bmp, 0, 0, brush);
     }
 }

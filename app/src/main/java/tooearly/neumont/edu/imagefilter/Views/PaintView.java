@@ -1,25 +1,27 @@
 package tooearly.neumont.edu.imagefilter.Views;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Path;
-import android.graphics.PointF;
-import android.graphics.RectF;
-import android.os.Build;
-import android.support.v4.view.MotionEventCompat;
+//import android.graphics.Color;
+//import android.graphics.Paint;
+//import android.graphics.Path;
+//import android.graphics.PointF;
+//import android.graphics.RectF;
+//import android.os.Build;
+//import android.support.v4.view.MotionEventCompat;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
+//import android.view.MotionEvent;
 import android.view.View;
 
-import java.util.ArrayList;
+//import java.util.ArrayList;
 
-import tooearly.neumont.edu.imagefilter.Util.LinePaintCommand;
+//import tooearly.neumont.edu.imagefilter.Util.BitmapPaintCommand;
+//import tooearly.neumont.edu.imagefilter.Util.LinePaintCommand;
 import tooearly.neumont.edu.imagefilter.Util.PaintCommandStack;
-import tooearly.neumont.edu.imagefilter.Util.PathPaintCommand;
-import tooearly.neumont.edu.imagefilter.Util.ShapePaintCommand;
-import tooearly.neumont.edu.imagefilter.Util.ShapeType;
+//import tooearly.neumont.edu.imagefilter.Util.PathPaintCommand;
+//import tooearly.neumont.edu.imagefilter.Util.ShapePaintCommand;
+//import tooearly.neumont.edu.imagefilter.Util.ShapeType;
 
 public class PaintView extends View {
 
@@ -29,9 +31,10 @@ public class PaintView extends View {
         this.stack = new PaintCommandStack();
         setWillNotDraw(false);
 
-        init();
+//        init();
     }
 
+    /*
     private void init() {
         curX = 0;
         curY = 0;
@@ -49,14 +52,24 @@ public class PaintView extends View {
         setBrushColor(brushColor);
         setBrushSize(brushSize);
     }
+    */
 
     public final PaintCommandStack stack;
 
-    private float startX, startY, curX, curY;
-    private boolean isDrawingShape = false;
-    private Paint myBrush;
-    private ArrayList<PointF> lineCoordsAry;
+//    private float startX, startY, curX, curY;
+//    private boolean isDrawingShape = false;
+//    private Paint myBrush;
+//    private ArrayList<PointF> lineCoordsAry;
 
+    private Bitmap baseImage;
+    public void setBaseImage(Bitmap bmp) {
+        baseImage = bmp;
+    }
+    public Bitmap getBaseImage() {
+        return baseImage;
+    }
+
+    /*
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (shapeType == ShapeType.Brush) return onBrushTouchEvent(event);
@@ -164,12 +177,14 @@ public class PaintView extends View {
 
         return brush;
     }
+    */
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         this.stack.render(this, canvas);
 
+        /*
         if (isDrawingShape) {
             switch (shapeType) {
                 case Rect:
@@ -189,7 +204,9 @@ public class PaintView extends View {
                     canvas.drawPath(path, myBrush);
             }
         }
+        */
     }
+    /*
     private RectF getShapeRect() {
         if (shapeType == ShapeType.Line) return new RectF(startX, startY, curX, curY);
         else return new RectF(Math.min(startX, curX), Math.min(startY, curY), Math.max(startX, curX), Math.max(startY, curY));
@@ -221,5 +238,5 @@ public class PaintView extends View {
         this.brushSize = size;
         setShapeType(ShapeType.Brush);
     }
-
+    */
 }

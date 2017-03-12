@@ -8,6 +8,7 @@ import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.Rect;
 
 import java.util.Stack;
 
@@ -27,16 +28,24 @@ public class PaintCommandStack {
     private float[] matrixValues = new float[9];
 
     public void render(PaintView view, Canvas canvas) {
-        PaintFrame frame = new PaintFrame(view, canvas);
+        render(view, canvas, true);
+    }
+    public void render(PaintView view, Canvas canvas, boolean translateByViewCoords) {
+        PaintFrame frame = new PaintFrame(view, canvas, translateByViewCoords);
         Bitmap baseImg = view.getBaseImage();
         bmpCmd.setBitmap(baseImg);
 
         float gutterLeft = 0, gutterRight = 0, gutterTop = 0, gutterBottom = 0;
-        float scale = 1;
-        Matrix previousMatrix = new Matrix();
+        float scale;
+        Matrix previousMatrix = view.getMatrix();
+        Rect visibleRect = new Rect();
+        view.getGlobalVisibleRect(visibleRect);
         float canvasWidth = canvas.getWidth(), canvasHeight = canvas.getHeight();
-        float aspectRatio = baseImg.getWidth() / baseImg.getHeight();
-        float viewAspectRatio = canvasWidth / (float)canvasHeight;
+        Rect clip = canvas.getClipBounds();
+        if (clip.width() < canvasWidth) canvasWidth = clip.width();
+        if (clip.height() < canvasHeight) canvasHeight = clip.height();
+        float viewAspectRatio = canvasWidth / canvasHeight;
+        float aspectRatio = baseImg.getWidth() / (float)baseImg.getHeight();
         if (viewAspectRatio > aspectRatio) {
             scale = canvasHeight / baseImg.getHeight();
             gutterLeft = gutterRight = (canvasWidth - baseImg.getWidth() * scale) / 2;
@@ -45,8 +54,8 @@ public class PaintCommandStack {
             scale = canvasWidth / baseImg.getWidth();
             gutterTop = gutterBottom = (canvasHeight - baseImg.getHeight() * scale) / 2;
         }
-        previousMatrix.postTranslate(gutterLeft, gutterTop);
         previousMatrix.postScale(scale, scale);
+        previousMatrix.postTranslate(visibleRect.left + gutterLeft + clip.left, visibleRect.top + gutterTop + clip.top);
 
         ColorMatrix previousColorMatrix = null;
         ColorFilter previousColorFilter = null;

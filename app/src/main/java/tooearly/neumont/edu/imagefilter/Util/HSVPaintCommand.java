@@ -22,8 +22,8 @@ public class HSVPaintCommand extends ColorMatrixCommand {
         }
         if (hue != 0) {
             //Mathematical formula to create a "shift-hue" color matrix adapted from http://stackoverflow.com/a/17490633/768597
-            float cosVal = (float)Math.cos(value);
-            float sinVal = (float)Math.sin(value);
+            float cosVal = (float)Math.cos(hue);
+            float sinVal = (float)Math.sin(hue);
             float lumR = 0.213f;
             float lumG = 0.715f;
             float lumB = 0.072f;

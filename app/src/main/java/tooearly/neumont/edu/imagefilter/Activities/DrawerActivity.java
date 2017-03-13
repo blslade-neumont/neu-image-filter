@@ -19,6 +19,7 @@ import tooearly.neumont.edu.imagefilter.Services.BitmapStorageService;
 import tooearly.neumont.edu.imagefilter.Services.ConvolutionService;
 import tooearly.neumont.edu.imagefilter.Util.BWPaintCommand;
 import tooearly.neumont.edu.imagefilter.Util.BitmapPaintCommand;
+import tooearly.neumont.edu.imagefilter.Util.HSVPaintCommand;
 import tooearly.neumont.edu.imagefilter.Util.InvertPaintCommand;
 import tooearly.neumont.edu.imagefilter.Util.MatrixPaintCommand;
 import tooearly.neumont.edu.imagefilter.Util.PaintCommand;
@@ -94,6 +95,54 @@ public class DrawerActivity extends AppCompatActivity {
             @Override
             public void run() {
                 convolute("Sharpen", ConvolutionService.sharpen3x3);
+            }
+        });
+        addDrawerItem("Lower Saturation", new Runnable() {
+            @Override
+            public void run() {
+                addCommand(new HSVPaintCommand(0, .5f, 0));
+            }
+        });
+        addDrawerItem("Increase Saturation", new Runnable() {
+            @Override
+            public void run() {
+                addCommand(new HSVPaintCommand(0, 1.5f, 0));
+            }
+        });
+        addDrawerItem("Red Shift", new Runnable() {
+            @Override
+            public void run() {
+                addCommand(new HSVPaintCommand(-((3.14159f)/(3.0f)), 0, 0));
+            }
+        });
+        addDrawerItem("Blue Shift", new Runnable() {
+            @Override
+            public void run() {
+                addCommand(new HSVPaintCommand(((3.14159f)/(3.0f)), 0, 0));
+            }
+        });
+        addDrawerItem("Darken", new Runnable() {
+            @Override
+            public void run() {
+                addCommand(new HSVPaintCommand(0, 0, -32));
+            }
+        });
+        addDrawerItem("Lighten", new Runnable() {
+            @Override
+            public void run() {
+                addCommand(new HSVPaintCommand(0, 0, 32));
+            }
+        });
+        addDrawerItem("Willy Wonky", new Runnable() {
+            @Override
+            public void run() {
+                addCommand(new HSVPaintCommand(-5, -5, 0));
+            }
+        });
+        addDrawerItem("Petri Dish Mode", new Runnable() {
+            @Override
+            public void run() {
+                addCommand(new HSVPaintCommand(255, 205, 0));
             }
         });
 

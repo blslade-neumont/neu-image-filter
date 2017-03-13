@@ -7,7 +7,7 @@ public class ConvolutionService {
         int width = original.getWidth(),
             height = original.getHeight();
         int[] pixels = new int[width * height];
-        original.getPixels(pixels, 0, 1, 0, 0, width, height);
+        original.getPixels(pixels, 0, width, 0, 0, width, height);
         if (original.getConfig() != Bitmap.Config.ARGB_8888) throw new IllegalStateException("Cannot convolute bitmap - invalid format");
 
         int kernelDist = kernel.length / 2;
@@ -38,10 +38,11 @@ public class ConvolutionService {
             }
         }
 
-        return Bitmap.createBitmap(newpixels, 0, 1, original.getWidth(), original.getHeight(), Bitmap.Config.ARGB_8888);
+        return Bitmap.createBitmap(newpixels, 0, original.getWidth(), original.getWidth(), original.getHeight(), Bitmap.Config.ARGB_8888);
     }
 
     public static float[][] gaussianBlur5x5;
+    public static float[][] boxBlur5x5;
     public static float[][] sharpen3x3;
 
     static {
@@ -52,7 +53,14 @@ public class ConvolutionService {
                 { 0.015019f, 0.059912f, 0.094907f, 0.059912f, 0.015019f },
                 { 0.003765f, 0.015019f, 0.023792f, 0.015019f, 0.003765f }
         };
-        final float SHARPEN_AMOUNT = 10;
+        boxBlur5x5 = new float[][] {
+                { 1/25.f, 1/25.f, 1/25.f, 1/25.f, 1/25.f },
+                { 1/25.f, 1/25.f, 1/25.f, 1/25.f, 1/25.f },
+                { 1/25.f, 1/25.f, 1/25.f, 1/25.f, 1/25.f },
+                { 1/25.f, 1/25.f, 1/25.f, 1/25.f, 1/25.f },
+                { 1/25.f, 1/25.f, 1/25.f, 1/25.f, 1/25.f }
+        };
+        final float SHARPEN_AMOUNT = 700;
         sharpen3x3 = new float[][] {
                 { -SHARPEN_AMOUNT/9.f, -SHARPEN_AMOUNT/9.f,      -SHARPEN_AMOUNT/9.f },
                 { -SHARPEN_AMOUNT/9.f, 1+(8*SHARPEN_AMOUNT/9.f), -SHARPEN_AMOUNT/9.f },

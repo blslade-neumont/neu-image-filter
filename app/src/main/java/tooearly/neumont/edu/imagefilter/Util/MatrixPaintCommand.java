@@ -2,6 +2,7 @@ package tooearly.neumont.edu.imagefilter.Util;
 
 import android.graphics.ColorFilter;
 import android.graphics.Matrix;
+import android.graphics.Rect;
 
 public class MatrixPaintCommand extends PaintCommand {
     public MatrixPaintCommand(String name, float scaleX, float scaleY) {
@@ -26,15 +27,13 @@ public class MatrixPaintCommand extends PaintCommand {
     @Override
     public Matrix calculateMatrix(Matrix matrix, PaintFrame frame) {
         if (scaleX != 1 || scaleY != 1) {
-            int padLeft = frame.paintView.getPaddingLeft();
-            int padRight = frame.paintView.getPaddingRight();
-            int drawWidth = frame.paintView.getWidth() - (padLeft + padRight);
-            int padTop = frame.paintView.getPaddingTop();
-            int padBottom = frame.paintView.getPaddingBottom();
-            int drawHeight = frame.paintView.getHeight() - (padTop + padBottom);
-            matrix.postTranslate(-(padLeft + (drawWidth / 2)), -(padTop + (drawHeight / 2)));
+            Rect visibleRect = new Rect();
+            if (frame.shift) frame.paintView.getGlobalVisibleRect(visibleRect);
+            else frame.canvas.getClipBounds(visibleRect);
+
+            matrix.postTranslate(-(visibleRect.left + visibleRect.width() / 2), -(visibleRect.top + visibleRect.height() / 2));
             matrix.postScale(scaleX, scaleY);
-            matrix.postTranslate(padLeft + (drawWidth / 2), padTop + (drawHeight / 2));
+            matrix.postTranslate(+(visibleRect.left + visibleRect.width() / 2), +(visibleRect.top + visibleRect.height() / 2));
         }
         matrix.postTranslate(translateX, translateY);
         matrix.postRotate(rotate, rotateOriginX, rotateOriginY);

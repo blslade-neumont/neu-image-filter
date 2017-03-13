@@ -2,6 +2,7 @@ package tooearly.neumont.edu.imagefilter.Activities;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,7 +16,10 @@ import java.util.List;
 
 import tooearly.neumont.edu.imagefilter.R;
 import tooearly.neumont.edu.imagefilter.Services.BitmapStorageService;
+import tooearly.neumont.edu.imagefilter.Services.ConvolutionService;
 import tooearly.neumont.edu.imagefilter.Util.BWPaintCommand;
+import tooearly.neumont.edu.imagefilter.Util.BitmapPaintCommand;
+import tooearly.neumont.edu.imagefilter.Util.HSVPaintCommand;
 import tooearly.neumont.edu.imagefilter.Util.HSVPaintCommand;
 import tooearly.neumont.edu.imagefilter.Util.InvertPaintCommand;
 import tooearly.neumont.edu.imagefilter.Util.MatrixPaintCommand;
@@ -76,11 +80,84 @@ public class DrawerActivity extends AppCompatActivity {
                 addCommand(new MatrixPaintCommand("Flip Vertically", 1, -1));
             }
         });
+        addDrawerItem("Gaussian Blur", new Runnable() {
+            @Override
+            public void run() {
+                convolute("Gaussian Blur", ConvolutionService.gaussianBlur5x5);
+            }
+        });
+        addDrawerItem("Box Blur", new Runnable() {
+            @Override
+            public void run() {
+                convolute("Box Blur", ConvolutionService.boxBlur5x5);
+            }
+        });
+        addDrawerItem("Sharpen", new Runnable() {
+            @Override
+            public void run() {
+                convolute("Sharpen", ConvolutionService.sharpen3x3);
+            }
+        });
+        addDrawerItem("Lower Saturation", new Runnable() {
+            @Override
+            public void run() {
+                addCommand(new HSVPaintCommand(0, .5f, 0));
+            }
+        });
+        addDrawerItem("Increase Saturation", new Runnable() {
+            @Override
+            public void run() {
+                addCommand(new HSVPaintCommand(0, 1.5f, 0));
+            }
+        });
+        addDrawerItem("Red Shift", new Runnable() {
+            @Override
+            public void run() {
+                addCommand(new HSVPaintCommand(-((3.14159f)/(3.0f)), 0, 0));
+            }
+        });
+        addDrawerItem("Blue Shift", new Runnable() {
+            @Override
+            public void run() {
+                addCommand(new HSVPaintCommand(((3.14159f)/(3.0f)), 0, 0));
+            }
+        });
+        addDrawerItem("Darken", new Runnable() {
+            @Override
+            public void run() {
+                addCommand(new HSVPaintCommand(0, 0, -32));
+            }
+        });
+        addDrawerItem("Lighten", new Runnable() {
+            @Override
+            public void run() {
+                addCommand(new HSVPaintCommand(0, 0, 32));
+            }
+        });
+        addDrawerItem("Willy Wonky", new Runnable() {
+            @Override
+            public void run() {
+                addCommand(new HSVPaintCommand(-5, -5, 0));
+            }
+        });
+        addDrawerItem("Petri Dish Mode", new Runnable() {
+            @Override
+            public void run() {
+                addCommand(new HSVPaintCommand(255, 205, 0));
+            }
+        });
 
 
 
 
         finalizeDrawer();
+    }
+    private void convolute(String name, float[][] kernel) {
+        Bitmap bmp = Bitmap.createBitmap(paintView.getBaseImage().getWidth(), paintView.getBaseImage().getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bmp);
+        paintView.stack.render(paintView, canvas, false);
+        bmp = ConvolutionService.convolute(bmp, kernel);
+        addCommand(new BitmapPaintCommand(name, bmp));
     }
     private void addDrawerItem(String name, Runnable action) {
         drawerNames.add(name);

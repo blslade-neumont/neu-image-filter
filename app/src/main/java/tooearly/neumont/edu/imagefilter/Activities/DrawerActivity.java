@@ -171,17 +171,17 @@ public class DrawerActivity extends AppCompatActivity {
                 })));
             }
         });
-        addDrawerItem("Testing", new Runnable() {
+        addDrawerItem("Golden Edge", new Runnable() {
             @Override
             public void run() {
                 convolute("Golden Edge", ConvolutionService.goldenEdge3x3);
-                addCommand(new ColorMatrixCommand("my name", new ColorMatrix(new float[] {
-                        1, 0, 0, 0, 0,
-                        0.5f, 0, 0.5f, 0, 0,
-                        0, 0, 1, 0, 0,
-                        0, 0, 0, 1, 0,
-                        0, 0, 0, 0, 1
-                })));
+//                addCommand(new ColorMatrixCommand("Golden Edge", new ColorMatrix(new float[] {
+//                        1, 1, 0, 0, 10,
+//                        1, 1, 0, 0, 0,
+//                        0, 0, 1, 0, 0,
+//                        0, 0, 0, 1, 0,
+//                        0, 0, 0, 0, 1
+//                })));
             }
         });
 

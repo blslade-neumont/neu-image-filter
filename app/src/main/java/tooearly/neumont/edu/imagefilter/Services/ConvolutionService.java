@@ -68,9 +68,11 @@ public class ConvolutionService {
                 { -SHARPEN_AMOUNT/9.f, -SHARPEN_AMOUNT/9.f,      -SHARPEN_AMOUNT/9.f },
         };
         goldenEdge3x3 = new float[][] {
-                { 2f, 3f, -3f },
-                { 1f, -1f, 1f },
-                { -2f, 1f, -2f }
+                { 0f, 0f, 0f, 0f, 0f },
+                { 0f, 2f, 3f, -3f, 0f },
+                { 0f, 1f, -1f, 1f, 0f },
+                { 0f, -2f, 1f, -2f, 0f },
+                { 0f, 0f, 0f, 0f, 0f }
         };
 
     }

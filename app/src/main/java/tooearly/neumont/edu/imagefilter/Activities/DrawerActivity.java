@@ -146,7 +146,7 @@ public class DrawerActivity extends AppCompatActivity {
         addDrawerItem("Redless", new Runnable() {
             @Override
             public void run() {
-                addCommand(new ColorMatrixCommand("my name", new ColorMatrix(new float[] {
+                addCommand(new ColorMatrixCommand("Redless", new ColorMatrix(new float[] {
                         0, 0.5f, 0.5f, 0, 0,
                         0, 1, 0, 0, 0,
                         0, 0, 1, 0, 0,
@@ -158,7 +158,7 @@ public class DrawerActivity extends AppCompatActivity {
         addDrawerItem("Blueless", new Runnable() {
             @Override
             public void run() {
-                addCommand(new ColorMatrixCommand("my name", new ColorMatrix(new float[] {
+                addCommand(new ColorMatrixCommand("Blueless", new ColorMatrix(new float[] {
                         1, 0, 0, 0, 0,
                         0, 1, 0, 0, 0,
                         0.5f, 0.5f, 0, 0, 0,
@@ -170,7 +170,7 @@ public class DrawerActivity extends AppCompatActivity {
         addDrawerItem("Greenless", new Runnable() {
             @Override
             public void run() {
-                addCommand(new ColorMatrixCommand("my name", new ColorMatrix(new float[] {
+                addCommand(new ColorMatrixCommand("Greenless", new ColorMatrix(new float[] {
                         1, 0, 0, 0, 0,
                         0.5f, 0, 0.5f, 0, 0,
                         0, 0, 1, 0, 0,
@@ -190,6 +190,7 @@ public class DrawerActivity extends AppCompatActivity {
                         0, 0, 0, 1, 0,
                         0, 0, 0, 0, 1
                 })));
+                flatten("Golden Edge", 2);
             }
         });
 
@@ -216,6 +217,14 @@ public class DrawerActivity extends AppCompatActivity {
         Canvas canvas = new Canvas(bmp);
         paintView.stack.render(paintView, canvas, false);
         bmp = ConvolutionService.convolute(bmp, kernel);
+        addCommand(new BitmapPaintCommand(name, bmp));
+    }
+    private void flatten(String name, int count) {
+        Bitmap bmp = Bitmap.createBitmap(paintView.getBaseImage().getWidth(), paintView.getBaseImage().getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bmp);
+        paintView.stack.render(paintView, canvas, false);
+        for (int q = 0; q < count; q++)
+            paintView.stack.undo();
         addCommand(new BitmapPaintCommand(name, bmp));
     }
     private void addDrawerItem(String name, Runnable action) {

@@ -4,14 +4,16 @@ import android.graphics.Bitmap;
 
 public class ConvolutionService {
     public static Bitmap convolute(Bitmap original, float[][] kernel) {
-        int width = original.getWidth(),
-            height = original.getHeight();
-        int[] pixels = new int[width * height];
-        original.getPixels(pixels, 0, width, 0, 0, width, height);
         if (original.getConfig() != Bitmap.Config.ARGB_8888) throw new IllegalStateException("Cannot convolute bitmap - invalid format");
 
+        int width = original.getWidth(),
+            height = original.getHeight();
+        int stride = width;
+        int[] pixels = new int[width * height];
+        original.getPixels(pixels, 0, stride, 0, 0, width, height);
+
         int kernelDist = kernel.length / 2;
-        int kernelElementCount = kernel.length * kernel.length;
+//        int kernelElementCount = kernel.length * kernel.length;
 
         int[] newpixels = new int[width * height];
         for (int q = 0; q < width; q++) {
@@ -23,22 +25,22 @@ public class ConvolutionService {
                         int xx = Math.min(Math.max(q + i, 0), width - 1);
                         int yy = Math.min(Math.max(w + j, 0), height - 1);
                         int color = pixels[(yy * width) + xx];
-                        a += ((color >> 24) & 0xFF) / 255.f;
-                        r += ((color >> 16) & 0xFF) / 255.f;
-                        g += ((color >> 8)  & 0xFF) / 255.f;
-                        b += ((color)       & 0xFF) / 255.f;
+                        a += ((color >> 24) & 0xFF) * kernel[i + kernelDist][j + kernelDist] / 255.f;
+                        r += ((color >> 16) & 0xFF) * kernel[i + kernelDist][j + kernelDist] / 255.f;
+                        g += ((color >> 8)  & 0xFF) * kernel[i + kernelDist][j + kernelDist] / 255.f;
+                        b += ((color)       & 0xFF) * kernel[i + kernelDist][j + kernelDist] / 255.f;
                     }
                 }
 
                 newpixels[(w * width) + q] =
-                        ((int)Math.floor(a * 255 / kernelElementCount) << 24) |
-                        ((int)Math.floor(r * 255 / kernelElementCount) << 16) |
-                        ((int)Math.floor(g * 255 / kernelElementCount) << 8) |
-                        ((int)Math.floor(b * 255 / kernelElementCount));
+                        ((int)Math.floor(a * 255) << 24) |
+                        ((int)Math.floor(r * 255) << 16) |
+                        ((int)Math.floor(g * 255) << 8) |
+                        ((int)Math.floor(b * 255));
             }
         }
 
-        return Bitmap.createBitmap(newpixels, 0, original.getWidth(), original.getWidth(), original.getHeight(), Bitmap.Config.ARGB_8888);
+        return Bitmap.createBitmap(newpixels, 0, stride, original.getWidth(), original.getHeight(), Bitmap.Config.ARGB_8888);
     }
 
     public static float[][] gaussianBlur5x5;
@@ -61,7 +63,7 @@ public class ConvolutionService {
                 { 1/25.f, 1/25.f, 1/25.f, 1/25.f, 1/25.f },
                 { 1/25.f, 1/25.f, 1/25.f, 1/25.f, 1/25.f }
         };
-        final float SHARPEN_AMOUNT = 700;
+        final float SHARPEN_AMOUNT = 2;
         sharpen3x3 = new float[][] {
                 { -SHARPEN_AMOUNT/9.f, -SHARPEN_AMOUNT/9.f,      -SHARPEN_AMOUNT/9.f },
                 { -SHARPEN_AMOUNT/9.f, 1+(8*SHARPEN_AMOUNT/9.f), -SHARPEN_AMOUNT/9.f },

@@ -39,7 +39,7 @@ public class PaintCommandStack {
         float scale;
         Matrix previousMatrix = view.getMatrix();
         Rect visibleRect = new Rect();
-        view.getGlobalVisibleRect(visibleRect);
+        if (translateByViewCoords) view.getGlobalVisibleRect(visibleRect);
         float canvasWidth = canvas.getWidth(), canvasHeight = canvas.getHeight();
         Rect clip = canvas.getClipBounds();
         if (clip.width() < canvasWidth) canvasWidth = clip.width();

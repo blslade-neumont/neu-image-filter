@@ -27,6 +27,8 @@ import tooearly.neumont.edu.imagefilter.Util.PaintCommand;
 import tooearly.neumont.edu.imagefilter.Util.SepiaPaintCommand;
 import tooearly.neumont.edu.imagefilter.Views.PaintView;
 
+import static tooearly.neumont.edu.imagefilter.Activities.CaptureImageActivity.IMAGE_EXTRA;
+
 public class DrawerActivity extends AppCompatActivity {
 
     private ListView drawerList;
@@ -43,7 +45,7 @@ public class DrawerActivity extends AppCompatActivity {
 
     private void init() {
         Intent intent = getIntent();
-        Bitmap bmp = BitmapStorageService.storage.get(intent.getStringExtra(CaptureImageActivity.IMAGE_EXTRA));
+        Bitmap bmp = BitmapStorageService.storage.get(intent.getStringExtra(IMAGE_EXTRA));
         paintView = (PaintView)this.findViewById(R.id.paintView);
         paintView.setBaseImage(bmp);
 
@@ -206,14 +208,22 @@ public class DrawerActivity extends AppCompatActivity {
         save();
     }
     private void save() {
-
+        Bitmap bmp = Bitmap.createBitmap(paintView.getBaseImage().getWidth(), paintView.getBaseImage().getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bmp);
+        paintView.stack.render(paintView, canvas, false);
     }
 
     public void onShareClicked(View view) {
         share();
     }
     private void share() {
-
+        Bitmap bmp = Bitmap.createBitmap(paintView.getBaseImage().getWidth(), paintView.getBaseImage().getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bmp);
+        paintView.stack.render(paintView, canvas, false);
+        Intent intent = new Intent(this, ShareActivity.class);
+        BitmapStorageService.storage.put(bmp.toString(), bmp);
+        intent.putExtra(IMAGE_EXTRA, bmp.toString());
+        startActivity(intent);
     }
 
 }

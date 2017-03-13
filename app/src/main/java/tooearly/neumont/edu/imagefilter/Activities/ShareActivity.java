@@ -3,14 +3,21 @@ package tooearly.neumont.edu.imagefilter.Activities;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 
+import java.io.File;
 import java.io.OutputStream;
 
 import tooearly.neumont.edu.imagefilter.R;
+import tooearly.neumont.edu.imagefilter.Services.BitmapStorageService;
+
+import static tooearly.neumont.edu.imagefilter.Activities.CaptureImageActivity.IMAGE_EXTRA;
 
 /**
  * Created by Daniel Kuhrmeyer on 3/10/2017.
@@ -22,12 +29,14 @@ public class ShareActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_share);
 
-        Intent intent = new Intent(this, DrawerActivity.class);
 
     }
 
-    public void shareScreen(){
-        //Bitmap icon = mBitmap;
+    public void shareScreen(View v){
+        Intent randomVariable = getIntent();
+        String anotherVariable = randomVariable.getStringExtra(IMAGE_EXTRA);
+
+        Bitmap icon = BitmapStorageService.storage.get(anotherVariable);
         Intent share = new Intent(Intent.ACTION_SEND);
         share.setType("image/jpeg");
 
@@ -41,7 +50,7 @@ public class ShareActivity extends AppCompatActivity {
         OutputStream outstream;
         try {
             outstream = getContentResolver().openOutputStream(uri);
-            //icon.compress(Bitmap.CompressFormat.JPEG, 100, outstream);
+            icon.compress(Bitmap.CompressFormat.JPEG, 100, outstream);
             outstream.close();
         } catch (Exception e) {
             System.err.println(e.toString());

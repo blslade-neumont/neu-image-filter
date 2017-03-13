@@ -42,6 +42,11 @@ public class DrawerActivity extends AppCompatActivity {
         init();
     }
 
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(this, CaptureImageActivity.class));
+    }
+
     private void init() {
         Intent intent = getIntent();
         Bitmap bmp = BitmapStorageService.storage.get(intent.getStringExtra(CaptureImageActivity.IMAGE_EXTRA));

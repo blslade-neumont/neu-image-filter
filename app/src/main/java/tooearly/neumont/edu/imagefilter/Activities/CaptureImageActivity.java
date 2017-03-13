@@ -7,9 +7,11 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.net.Uri;
+import android.os.Debug;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -71,6 +73,7 @@ public class CaptureImageActivity extends AppCompatActivity {
                 int column_index_data = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
                 cursor.moveToFirst();
                 String capturedImageFilePath = cursor.getString(column_index_data);
+                Log.v("tag", "here:" + capturedImageFilePath);
                 imageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), Uri.fromFile(new File(capturedImageFilePath)));
             }
             catch (IOException ignored) { }

@@ -16,6 +16,7 @@ import java.util.List;
 import tooearly.neumont.edu.imagefilter.R;
 import tooearly.neumont.edu.imagefilter.Services.BitmapStorageService;
 import tooearly.neumont.edu.imagefilter.Util.BWPaintCommand;
+import tooearly.neumont.edu.imagefilter.Util.HSVPaintCommand;
 import tooearly.neumont.edu.imagefilter.Util.InvertPaintCommand;
 import tooearly.neumont.edu.imagefilter.Util.MatrixPaintCommand;
 import tooearly.neumont.edu.imagefilter.Util.PaintCommand;
@@ -75,6 +76,9 @@ public class DrawerActivity extends AppCompatActivity {
                 addCommand(new MatrixPaintCommand("Flip Vertically", 1, -1));
             }
         });
+
+
+
 
         finalizeDrawer();
     }

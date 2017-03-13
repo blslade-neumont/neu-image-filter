@@ -180,13 +180,13 @@ public class DrawerActivity extends AppCompatActivity {
             @Override
             public void run() {
                 convolute("Golden Edge", ConvolutionService.goldenEdge3x3);
-//                addCommand(new ColorMatrixCommand("Golden Edge", new ColorMatrix(new float[] {
-//                        1, 1, 0, 0, 10,
-//                        1, 1, 0, 0, 0,
-//                        0, 0, 1, 0, 0,
-//                        0, 0, 0, 1, 0,
-//                        0, 0, 0, 0, 1
-//                })));
+                addCommand(new ColorMatrixCommand("Golden Edge", new ColorMatrix(new float[] {
+                        1, 1, 0, 0, 10,
+                        1, 1, 0, 0, 0,
+                        0, 0, 1, 0, 0,
+                        0, 0, 0, 1, 0,
+                        0, 0, 0, 0, 1
+                })));
             }
         });
 

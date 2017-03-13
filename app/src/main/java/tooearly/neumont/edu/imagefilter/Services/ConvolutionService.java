@@ -44,6 +44,7 @@ public class ConvolutionService {
     public static float[][] gaussianBlur5x5;
     public static float[][] boxBlur5x5;
     public static float[][] sharpen3x3;
+    public static float[][] goldenEdge3x3;
 
     static {
         gaussianBlur5x5 = new float[][] {
@@ -66,5 +67,11 @@ public class ConvolutionService {
                 { -SHARPEN_AMOUNT/9.f, 1+(8*SHARPEN_AMOUNT/9.f), -SHARPEN_AMOUNT/9.f },
                 { -SHARPEN_AMOUNT/9.f, -SHARPEN_AMOUNT/9.f,      -SHARPEN_AMOUNT/9.f },
         };
+        goldenEdge3x3 = new float[][] {
+                { 2f, 3f, -3f },
+                { 1f, -1f, 1f },
+                { -2f, 1f, -2f }
+        };
+
     }
 }

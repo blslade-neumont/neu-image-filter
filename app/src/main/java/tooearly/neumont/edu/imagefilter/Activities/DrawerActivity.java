@@ -3,6 +3,7 @@ package tooearly.neumont.edu.imagefilter.Activities;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.ColorMatrix;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import tooearly.neumont.edu.imagefilter.Services.BitmapStorageService;
 import tooearly.neumont.edu.imagefilter.Services.ConvolutionService;
 import tooearly.neumont.edu.imagefilter.Util.BWPaintCommand;
 import tooearly.neumont.edu.imagefilter.Util.BitmapPaintCommand;
+import tooearly.neumont.edu.imagefilter.Util.ColorMatrixCommand;
 import tooearly.neumont.edu.imagefilter.Util.HSVPaintCommand;
 import tooearly.neumont.edu.imagefilter.Util.InvertPaintCommand;
 import tooearly.neumont.edu.imagefilter.Util.MatrixPaintCommand;
@@ -133,6 +135,56 @@ public class DrawerActivity extends AppCompatActivity {
                 addCommand(new HSVPaintCommand(0, 0, 32));
             }
         });
+        addDrawerItem("Redless", new Runnable() {
+            @Override
+            public void run() {
+                addCommand(new ColorMatrixCommand("my name", new ColorMatrix(new float[] {
+                        0, 0.5f, 0.5f, 0, 0,
+                        0, 1, 0, 0, 0,
+                        0, 0, 1, 0, 0,
+                        0, 0, 0, 1, 0,
+                        0, 0, 0, 0, 1
+                })));
+            }
+        });
+        addDrawerItem("Blueless", new Runnable() {
+            @Override
+            public void run() {
+                addCommand(new ColorMatrixCommand("my name", new ColorMatrix(new float[] {
+                        1, 0, 0, 0, 0,
+                        0, 1, 0, 0, 0,
+                        0.5f, 0.5f, 0, 0, 0,
+                        0, 0, 0, 1, 0,
+                        0, 0, 0, 0, 1
+                })));
+            }
+        });
+        addDrawerItem("Greenless", new Runnable() {
+            @Override
+            public void run() {
+                addCommand(new ColorMatrixCommand("my name", new ColorMatrix(new float[] {
+                        1, 0, 0, 0, 0,
+                        0.5f, 0, 0.5f, 0, 0,
+                        0, 0, 1, 0, 0,
+                        0, 0, 0, 1, 0,
+                        0, 0, 0, 0, 1
+                })));
+            }
+        });
+        addDrawerItem("Testing", new Runnable() {
+            @Override
+            public void run() {
+                convolute("Golden Edge", ConvolutionService.goldenEdge3x3);
+                addCommand(new ColorMatrixCommand("my name", new ColorMatrix(new float[] {
+                        1, 0, 0, 0, 0,
+                        0.5f, 0, 0.5f, 0, 0,
+                        0, 0, 1, 0, 0,
+                        0, 0, 0, 1, 0,
+                        0, 0, 0, 0, 1
+                })));
+            }
+        });
+
         addDrawerItem("Willy Wonky", new Runnable() {
             @Override
             public void run() {

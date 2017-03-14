@@ -85,8 +85,7 @@ public class PaintCommandStack {
             }
         }
 
-        Paint clearBrush = new Paint(Color.WHITE);
-        clearBrush.setColorFilter(previousColorFilter);
+        Paint clearBrush = new Paint(Color.BLACK);
         canvas.drawPaint(clearBrush);
 
         for (int q = startCommand; q < undoStack.size(); q++) {

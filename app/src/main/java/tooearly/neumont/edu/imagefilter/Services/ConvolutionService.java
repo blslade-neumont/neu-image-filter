@@ -13,7 +13,6 @@ public class ConvolutionService {
         original.getPixels(pixels, 0, stride, 0, 0, width, height);
 
         int kernelDist = kernel.length / 2;
-//        int kernelElementCount = kernel.length * kernel.length;
 
         int[] newpixels = new int[width * height];
         for (int q = 0; q < width; q++) {
@@ -24,7 +23,7 @@ public class ConvolutionService {
                     for (int j = -kernelDist; j <= kernelDist; j++) {
                         int xx = Math.min(Math.max(q + i, 0), width - 1);
                         int yy = Math.min(Math.max(w + j, 0), height - 1);
-                        int color = pixels[(yy * width) + xx];
+                        int color = pixels[(yy * stride) + xx];
                         a += ((color >> 24) & 0xFF) * kernel[i + kernelDist][j + kernelDist] / 255.f;
                         r += ((color >> 16) & 0xFF) * kernel[i + kernelDist][j + kernelDist] / 255.f;
                         g += ((color >> 8)  & 0xFF) * kernel[i + kernelDist][j + kernelDist] / 255.f;
@@ -32,7 +31,7 @@ public class ConvolutionService {
                     }
                 }
 
-                newpixels[(w * width) + q] =
+                newpixels[(w * stride) + q] =
                         ((int)Math.floor(a * 255) << 24) |
                         ((int)Math.floor(r * 255) << 16) |
                         ((int)Math.floor(g * 255) << 8) |
@@ -74,6 +73,5 @@ public class ConvolutionService {
                 { 1f, -1f, 1f },
                 { -2f, 1f, -2f }
         };
-
     }
 }

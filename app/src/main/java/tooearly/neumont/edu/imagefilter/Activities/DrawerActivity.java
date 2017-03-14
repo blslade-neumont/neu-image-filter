@@ -207,9 +207,6 @@ public class DrawerActivity extends AppCompatActivity {
             }
         });
 
-
-
-
         finalizeDrawer();
     }
     private void convolute(String name, float[][] kernel) {

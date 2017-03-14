@@ -8,4 +8,8 @@
     <string name="err_no_image_storage_location">Failed to create an image storage location. Failing fast</string>
 
     <string name="msg_image_saved">Your modified image was saved to your gallery!</string>
+
+    <string name="lbl_share_name">Name:</string>
+    <string name="lbl_share_description">Description:</string>
+    <string name="msg_failed_to_share_image">Failed to save image to disk in order to share it.</string>
 </resources>

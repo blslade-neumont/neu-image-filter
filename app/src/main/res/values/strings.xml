@@ -6,4 +6,6 @@
     
     <string name="err_no_camera">Your device has no camera. WTF?</string>
     <string name="err_no_image_storage_location">Failed to create an image storage location. Failing fast</string>
+
+    <string name="msg_image_saved">Your modified image was saved to your gallery!</string>
 </resources>

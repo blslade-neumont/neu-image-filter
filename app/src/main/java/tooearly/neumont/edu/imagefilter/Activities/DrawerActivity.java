@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.ColorMatrix;
+import android.provider.MediaStore;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,9 +12,11 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import tooearly.neumont.edu.imagefilter.R;
 import tooearly.neumont.edu.imagefilter.Services.BitmapStorageService;
@@ -274,6 +277,9 @@ public class DrawerActivity extends AppCompatActivity {
         Bitmap bmp = Bitmap.createBitmap(paintView.getBaseImage().getWidth(), paintView.getBaseImage().getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bmp);
         paintView.stack.render(paintView, canvas, false);
+
+        MediaStore.Images.Media.insertImage(getContentResolver(), bmp, null, "Created using TooEarly Image Filter.");
+        Toast.makeText(this, R.string.msg_image_saved, Toast.LENGTH_LONG).show();
     }
 
     public void onShareClicked(View view) {
